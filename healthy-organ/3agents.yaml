@@ -1,56 +1,37 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: terraform-agent-1
-  labels:
-    app: terraform-cloud-agent
+  name: terraform-agent
 spec:
-  containers:
-    - name: terraform-agent
-      image: hashicorp/tfc-agent:latest
-      env:
-        - name: TFC_AGENT_TOKEN
-          value: "D1Otggk5bahOww.atlasv1.Iq2FuoEybPG6rEzD4Igiz70pK3ZqxrasQDJ0nPKazBFv8jG7cPz78VJTOD9H2cAQfAA"
-        - name: TFC_AGENT_NAME
-          value: "agent1"
-      ports:
-        - containerPort: 8080
-  restartPolicy: Always
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: terraform-agent-2
-  labels:
-    app: terraform-cloud-agent
-spec:
-  containers:
-    - name: terraform-agent
-      image: hashicorp/tfc-agent:latest
-      env:
-        - name: TFC_AGENT_TOKEN
-          value: "t7al1JCTtC9QMw.atlasv1.WcR7XsP12WyGExlyRmyfDv0zXzguiGOjftbiMdhnBcGL4PAjZh8shML7okn86Np37rY"
-        - name: TFC_AGENT_NAME
-          value: "agent2"
-      ports:
-        - containerPort: 8080
-  restartPolicy: Always
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: terraform-agent-3
-  labels:
-    app: terraform-cloud-agent
-spec:
-  containers:
-    - name: terraform-agent
-      image: hashicorp/tfc-agent:latest
-      env:
-        - name: TFC_AGENT_TOKEN
-          value: "T15bS440NVIDAQ.atlasv1.2AMFEoEc06W5yv2Q9wkpXGdzCfs0Jrhj5dqOlWjLQ89iwwRw3A4G27A3PVjlmqzzOQY"
-        - name: TFC_AGENT_NAME
-          value: "agent3"
-      ports:
-        - containerPort: 8080
-  restartPolicy: Always
+  serviceName: terraform-agent
+  replicas: 3
+  selector:
+    matchLabels:
+      app: terraform-cloud-agent
+  template:
+    metadata:
+      labels:
+        app: terraform-cloud-agent
+    spec:
+      containers:
+        - name: terraform-agent
+          image: hashicorp/tfc-agent:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TFC_AGENT_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: TFC_AGENT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: healthy-organ-tokens
+                  key: |
+                    {{- if eq (printf "%d" .metadata.name | split "-" | last) "0" -}}
+                    token-agent1
+                    {{- else if eq (printf "%d" .metadata.name | split "-" | last) "1" -}}
+                    token-agent2
+                    {{- else -}}
+                    token-agent3
+                    {{- end }}
