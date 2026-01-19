@@ -15,19 +15,45 @@ spec:
       labels:
         app: terraform-cloud-agent
     spec:
+      restartPolicy: Always
       containers:
-        - name: terraform-agent
-          image: hashicorp/tfc-agent:latest  # Terraform Cloud Agent Docker Image
+        - name: terraform-agent-1
+          image: hashicorp/tfc-agent:latest
           env:
-            - name: TFC_AGENT_TOKEN  # The Terraform Cloud agent token
-              value: "D1Otggk5bahOww.atlasv1.Iq2FuoEybPG6rEzD4Igiz70pK3ZqxrasQDJ0nPKazBFv8jG7cPz78VJTOD9H2cAQfAA"
+            - name: TFC_AGENT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: healthy-organ-tokens
+                  key: token-agent1  # Referencing the first token from the Secret
             - name: TFC_AGENT_NAME
-              value: "agentinpod"
-            - name: TFC_AGENT_LOG_LEVEL
-              value: "trace"
+              value: "agent-1"
           ports:
             - containerPort: 8080
-      restartPolicy: Always
-
+        
+        - name: terraform-agent-2
+          image: hashicorp/tfc-agent:latest
+          env:
+            - name: TFC_AGENT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: healthy-organ-tokens
+                  key: token-agent2  # Referencing the second token from the Secret
+            - name: TFC_AGENT_NAME
+              value: "agent-2"
+          ports:
+            - containerPort: 8080
+        
+        - name: terraform-agent-3
+          image: hashicorp/tfc-agent:latest
+          env:
+            - name: TFC_AGENT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: healthy-organ-tokens
+                  key: token-agent3  # Referencing the third token from the Secret
+            - name: TFC_AGENT_NAME
+              value: "agent-3"
+          ports:
+            - containerPort: 8080
 
 
