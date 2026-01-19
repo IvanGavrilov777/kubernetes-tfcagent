@@ -5,28 +5,12 @@ metadata:
   labels:
     app: terraform-cloud-agent
 spec:
-  initContainers:
-    - name: wait-for-env
-      image: busybox
-      command:
-        - "/bin/sh"
-        - "-c"
-        - "until [ -n \"$TFC_AGENT_TOKEN\" ]; do echo 'Waiting for TFC_AGENT_TOKEN...'; sleep 2; done;"
-      env:
-        - name: TFC_AGENT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: healthy-organ-tokens
-              key: token-agent1
   containers:
     - name: terraform-agent
       image: hashicorp/tfc-agent:latest
       env:
         - name: TFC_AGENT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: healthy-organ-tokens
-              key: token-agent1
+          value: "D1Otggk5bahOww.atlasv1.Iq2FuoEybPG6rEzD4Igiz70pK3ZqxrasQDJ0nPKazBFv8jG7cPz78VJTOD9H2cAQfAA"
         - name: TFC_AGENT_NAME
           value: "agent1"
       ports:
@@ -45,10 +29,7 @@ spec:
       image: hashicorp/tfc-agent:latest
       env:
         - name: TFC_AGENT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: healthy-organ-tokens
-              key: token-agent2
+          value: "t7al1JCTtC9QMw.atlasv1.WcR7XsP12WyGExlyRmyfDv0zXzguiGOjftbiMdhnBcGL4PAjZh8shML7okn86Np37rY"
         - name: TFC_AGENT_NAME
           value: "agent2"
       ports:
@@ -67,10 +48,7 @@ spec:
       image: hashicorp/tfc-agent:latest
       env:
         - name: TFC_AGENT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: healthy-organ-tokens
-              key: token-agent3
+          value: "T15bS440NVIDAQ.atlasv1.2AMFEoEc06W5yv2Q9wkpXGdzCfs0Jrhj5dqOlWjLQ89iwwRw3A4G27A3PVjlmqzzOQY"
         - name: TFC_AGENT_NAME
           value: "agent3"
       ports:
