@@ -10,10 +10,7 @@ spec:
       image: hashicorp/tfc-agent:latest  # Terraform Cloud Agent Docker Image
       env:
         - name: TFC_AGENT_TOKEN  # The Terraform Cloud agent token
-          valueFrom:
-            secretKeyRef:
-              name: terraform-cloud-tokens  # Reference the Kubernetes secret
-              key: TFC_AGENT_TOKEN1  # Reference the key in the secret
+          value: "D1Otggk5bahOww.atlasv1.Iq2FuoEybPG6rEzD4Igiz70pK3ZqxrasQDJ0nPKazBFv8jG7cPz78VJTOD9H2cAQfAA"
         - name: TFC_AGENT_NAME
           value: "agentinpod"
       ports:
