@@ -5,6 +5,19 @@ metadata:
   labels:
     app: terraform-cloud-agent
 spec:
+  initContainers:
+    - name: wait-for-env
+      image: busybox
+      command:
+        - "/bin/sh"
+        - "-c"
+        - "until [ -n \"$TFC_AGENT_TOKEN\" ]; do echo 'Waiting for TFC_AGENT_TOKEN...'; sleep 2; done;"
+      env:
+        - name: TFC_AGENT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: healthy-organ-tokens
+              key: token-agent1
   containers:
     - name: terraform-agent
       image: hashicorp/tfc-agent:latest
