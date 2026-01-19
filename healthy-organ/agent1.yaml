@@ -22,6 +22,8 @@ spec:
               value: "D1Otggk5bahOww.atlasv1.Iq2FuoEybPG6rEzD4Igiz70pK3ZqxrasQDJ0nPKazBFv8jG7cPz78VJTOD9H2cAQfAA"
             - name: TFC_AGENT_NAME
               value: "agentinpod"
+            - name: TFC_AGENT_LOG_LEVEL
+              value: "trace"
           ports:
             - containerPort: 8080
       restartPolicy: Always
