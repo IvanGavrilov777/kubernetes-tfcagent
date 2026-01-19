@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: terraform-agent
+  labels:
+    app: terraform-cloud-agent
+spec:
+  containers:
+    - name: terraform-agent
+      image: hashicorp/tfc-agent:latest  # Terraform Cloud Agent Docker Image
+      env:
+        - name: TFC_AGENT_TOKEN  # The Terraform Cloud agent token
+          valueFrom:
+            secretKeyRef:
+              name: terraform-cloud-tokens  # Reference the Kubernetes secret
+              key: TFC_AGENT_TOKEN1  # Reference the key in the secret
+        - name: TFC_AGENT_NAME
+          value: "agentinpod"
+      ports:
+        - containerPort: 8080
+  restartPolicy: Always
+  
