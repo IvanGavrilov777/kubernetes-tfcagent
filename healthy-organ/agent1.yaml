@@ -6,6 +6,7 @@ metadata:
     app: terraform-cloud-agent
 spec:
   replicas: 1  # Number of replicas for the deployment
+  revisionHistoryLimit: 2  # Retain only 2 old ReplicaSets
   selector:
     matchLabels:
       app: terraform-cloud-agent
