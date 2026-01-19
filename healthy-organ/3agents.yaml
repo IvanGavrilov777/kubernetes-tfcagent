@@ -1,17 +1,18 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: terraform-agent
+  name: terraform-agent-1
 spec:
-  serviceName: terraform-agent
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: terraform-cloud-agent
+      agent: agent1
   template:
     metadata:
       labels:
         app: terraform-cloud-agent
+        agent: agent1
     spec:
       containers:
         - name: terraform-agent
@@ -20,18 +21,69 @@ spec:
             - containerPort: 8080
           env:
             - name: TFC_AGENT_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
+              value: agent1
             - name: TFC_AGENT_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: healthy-organ-tokens
-                  key: |
-                    {{- if eq (printf "%d" .metadata.name | split "-" | last) "0" -}}
-                    token-agent1
-                    {{- else if eq (printf "%d" .metadata.name | split "-" | last) "1" -}}
-                    token-agent2
-                    {{- else -}}
-                    token-agent3
-                    {{- end }}
+                  key: token-agent1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terraform-agent-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: terraform-cloud-agent
+      agent: agent2
+  template:
+    metadata:
+      labels:
+        app: terraform-cloud-agent
+        agent: agent2
+    spec:
+      containers:
+        - name: terraform-agent
+          image: hashicorp/tfc-agent:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TFC_AGENT_NAME
+              value: agent2
+            - name: TFC_AGENT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: healthy-organ-tokens
+                  key: token-agent2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: terraform-agent-3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: terraform-cloud-agent
+      agent: agent3
+  template:
+    metadata:
+      labels:
+        app: terraform-cloud-agent
+        agent: agent3
+    spec:
+      containers:
+        - name: terraform-agent
+          image: hashicorp/tfc-agent:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TFC_AGENT_NAME
+              value: agent3
+            - name: TFC_AGENT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: healthy-organ-tokens
+                  key: token-agent3
