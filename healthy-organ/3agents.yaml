@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: terraform-agent-1
+  labels:
+    app: terraform-cloud-agent
+spec:
+  containers:
+    - name: terraform-agent
+      image: hashicorp/tfc-agent:latest
+      env:
+        - name: TFC_AGENT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: healthy-organ-tokens
+              key: token-agent1
+        - name: TFC_AGENT_NAME
+          value: "agent1"
+      ports:
+        - containerPort: 8080
+  restartPolicy: Always
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: terraform-agent-2
+  labels:
+    app: terraform-cloud-agent
+spec:
+  containers:
+    - name: terraform-agent
+      image: hashicorp/tfc-agent:latest
+      env:
+        - name: TFC_AGENT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: healthy-organ-tokens
+              key: token-agent2
+        - name: TFC_AGENT_NAME
+          value: "agent2"
+      ports:
+        - containerPort: 8080
+  restartPolicy: Always
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: terraform-agent-3
+  labels:
+    app: terraform-cloud-agent
+spec:
+  containers:
+    - name: terraform-agent
+      image: hashicorp/tfc-agent:latest
+      env:
+        - name: TFC_AGENT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: healthy-organ-tokens
+              key: token-agent3
+        - name: TFC_AGENT_NAME
+          value: "agent3"
+      ports:
+        - containerPort: 8080
+  restartPolicy: Always
